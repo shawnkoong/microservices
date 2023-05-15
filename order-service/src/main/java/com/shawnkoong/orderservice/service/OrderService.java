@@ -7,6 +7,7 @@ import com.shawnkoong.orderservice.model.Order;
 import com.shawnkoong.orderservice.model.OrderItem;
 import com.shawnkoong.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,6 +23,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate kafkaTemplate;
 
     public String createOrder(OrderRequest orderRequest) {
         Order order = new Order();
