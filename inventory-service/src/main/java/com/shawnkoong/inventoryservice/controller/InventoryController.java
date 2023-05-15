@@ -1,5 +1,6 @@
 package com.shawnkoong.inventoryservice.controller;
 
+import com.shawnkoong.inventoryservice.dto.InventoryRequest;
 import com.shawnkoong.inventoryservice.dto.InventoryResponse;
 import com.shawnkoong.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +20,11 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public List<InventoryResponse> isInStock(@RequestParam List<String> codes) {
         return inventoryService.isInStock(codes);
+    }
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createStockItem(@RequestBody InventoryRequest inventoryRequest) {
+        inventoryService.createInventoryItem(inventoryRequest);
     }
 }
