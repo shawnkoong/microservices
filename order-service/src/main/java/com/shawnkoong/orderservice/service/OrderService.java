@@ -2,6 +2,7 @@ package com.shawnkoong.orderservice.service;
 
 import com.shawnkoong.orderservice.dto.InventoryResponse;
 import com.shawnkoong.orderservice.dto.OrderRequest;
+import com.shawnkoong.orderservice.event.OrderPlacedEvent;
 import com.shawnkoong.orderservice.mapper.OrderItemMapper;
 import com.shawnkoong.orderservice.model.Order;
 import com.shawnkoong.orderservice.model.OrderItem;
@@ -23,7 +24,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
-    private final KafkaTemplate kafkaTemplate;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public String createOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -49,6 +50,7 @@ public class OrderService {
         boolean allInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
         if (allInStock) {
             orderRepository.save(order);
+            kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
             return "Order successfully created";
         } else {
             throw new IllegalArgumentException("Product out of stock");
