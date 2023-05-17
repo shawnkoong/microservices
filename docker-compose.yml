@@ -113,7 +113,7 @@ services:
 
   # API gateway config
   api-gateway:
-    container_name: api-server
+    container_name: api-gateway
     image: shawnkoong/api-gateway:latest
     ports:
       - "8181:8080"
